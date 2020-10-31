@@ -14,25 +14,25 @@ def write_to_csv():
         writer.writeheader()
         writer.writerows(rates)
 
-def codes():
+def currency_codes():
     codes = [code['code'] for code in rates]
     return codes
 
 
 app = Flask(__name__)
 
-@app.route("/currency/", methods=["GET", "POST"])
-def calculator():
+@app.route("/currency_calculator/", methods=["GET", "POST"])
+def currency_calculator():
     if request.method == "POST":
         data = request.form
         currency = data.get('currency')
         amount = int(data.get('amount'))
         for i in rates:
             if currency == i['code']:
-                ask = amount * i['ask']
-        return f"{str(ask)} PLN"
+                ask = round(amount * i['ask'], 1)
+        return f"Koszt wymiany {amount} {currency} na PLN to {str(ask)} PLN."
       
-    return render_template("main.html", codes=codes())
+    return render_template("main.html", codes=currency_codes())
 
 
 if __name__ == "__main__":
